@@ -30,14 +30,14 @@ jobs:
         
     - name: Setup Terraform 
       uses: hashicorp/setup-terraform@v2.0.3
-      with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
     - name: Terraform init 
       run: terraform init
       
+    - name: Terraform plan 
+      run: terraform plan -var-file="dev.tfvars" 
+      
     - name: Terraform Apply 
-      run: terraform apply 
+      run: terraform apply -var-file="dev.tfvars" 
     
 
