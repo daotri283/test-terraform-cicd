@@ -37,8 +37,8 @@ jobs:
          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: terraform init -backend-config="aws_access_key=${AWS_ACCESS_KEY_ID}" -backend-config="aws_secret_key=${AWS_SECRET_ACCESS_KEY}"
       
-    - name: Terraform plan 
-      run: terraform plan 
+#     - name: Terraform plan 
+#       run: terraform plan 
       
     - name: Terraform Apply 
       run: terraform apply
