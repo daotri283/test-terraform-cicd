@@ -13,37 +13,34 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v3
+#     - uses: actions/checkout@v3
+#     - name: Set up Python 3.8
+#       uses: actions/setup-python@v3
+#       with:
+#         python-version: '3.8'
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
       with:
-        python-version: '3.8'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    
-#     - name: Set up AWS credential
-#       env: 
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        
-    - name: Setup Terraform 
-      uses: hashicorp/setup-terraform@v2.0.3
-        
-    - name: Terraform init 
-      env:
-         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform init -backend-config="aws_access_key=${AWS_ACCESS_KEY_ID}" -backend-config="aws_secret_key=${AWS_SECRET_ACCESS_KEY}"
-      
-#     - name: Terraform plan 
-#       run: terraform plan 
-      
-    - name: Terraform Apply 
-      run: terraform apply -auto-approve
+        terraform_version: 1.0.1
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan --out=tfplan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply tfplan
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    
-
