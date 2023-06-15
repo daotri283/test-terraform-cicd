@@ -28,8 +28,8 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan    
+      run: terraform plan --out=tfplan -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "region=ap-southeast-1" -var "bucket_name=tri-test-bucket-final"
         
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply tfplan
+      run: terraform apply -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "region=ap-southeast-1" -var "bucket_name=tri-test-bucket-final"
